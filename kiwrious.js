@@ -15,7 +15,7 @@ app.use(BodyParser.urlencoded({ extended: true }));
 
 app.post('/api', (req, res) => {
   const data = req.body;
-  //save the data in the database
+  //save the dummyData for testing
   const dummyData = {
     data: '23/34/2005',
     location: 'kandy',
@@ -25,8 +25,7 @@ app.post('/api', (req, res) => {
   collection.insertOne(dummyData, (error, result) => {
     if (error) {
       console.log(error);
-
-      //return response.status(500).send(error);
+      return response.status(500).send(error);
     }
     console.log(result.result);
     res.send(result.result);
@@ -34,9 +33,12 @@ app.post('/api', (req, res) => {
 });
 
 app.get('/api', (req, res) => {
-  //get the data from database
-  //send as a json response
-  res.status(200).send(`server is up on ${PORT}`);
+  collection.find({}).toArray((error, result) => {
+    if (error) {
+      return res.status(500).send(error);
+    }
+    res.send(result);
+  });
 });
 
 app.listen(PORT, () => {
@@ -52,6 +54,5 @@ app.listen(PORT, () => {
     collection = client.db('kiwrious').collection('kiwrious');
     console.log('Connected to database kiwrious!');
     console.log(`Server is started on port ${PORT}`);
-    //client.close();
   });
 });
