@@ -12,30 +12,14 @@ router.use((req, res, next) => {
   next();
 });
 
-router.post('/', (req, res) => {
-  const data = req.body;
-  //save the dummyData for testing
-  //validate the data
-
-  const dummyData = {
-    userId: '65764465',
-    data: '23/34/2005',
-    location: 'kandy',
-    sensorType: 'thermo',
-    notes: null,
-  };
-
-  collection.insertOne(dummyData, (error, result) => {
-    if (error) {
-      console.log(error);
-      return response.status(500).send(error);
-    }
-    console.log(result.result);
-    res.send(result.result);
-  });
-});
-
 router.get('/', (req, res) => {
+  //take the parameters from url
+  const date1 = req.params.date1;
+  const date2 = req.params.date2;
+  const sensorType = req.params.sensorType;
+
+  //get the values according to the url
+  //date range and sensor type
   collection.find({}).toArray((error, result) => {
     if (error) {
       return res.status(500).send(error);

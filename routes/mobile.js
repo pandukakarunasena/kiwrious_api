@@ -1,20 +1,13 @@
 const express = require('express');
 const router = express.Router();
 
-// simple logger for this router's requests
-// all requests to this router will first hit this middleware
-router.use((req, res, next) => {
-  console.log('%s %s %s', req.method, req.url, req.path);
-  next();
-});
-
-// mobile/ ==> post data
-router.post('/', function (req, res) {
+router.post('/', (req, res) => {
   const data = req.body;
   //save the dummyData for testing
   //validate the data
 
   const dummyData = {
+    userId: '324asd',
     data: '23/34/2005',
     location: 'kandy',
     sensorType: 'thermo',
