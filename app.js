@@ -2,6 +2,8 @@ const Express = require('express');
 const BodyParser = require('body-parser');
 const MongoClient = require('mongodb').MongoClient;
 const ObjectId = require('mongodb').ObjectID;
+const mobileAPI = require('./routes/mobile');
+const webAPI = require('./routes/web');
 
 const CONNECTION_URL =
   'mongodb+srv://kiwriousUser:kiwriousPassword@kiwriouscluster.ddady.mongodb.net/kiwrious?retryWrites=true&w=majority';
@@ -12,36 +14,10 @@ const app = Express();
 
 app.use(BodyParser.json());
 app.use(BodyParser.urlencoded({ extended: true }));
+app.use('/mobile', mobileAPI);
+app.use('/web', webAPI);
 
-app.post('/api', (req, res) => {
-  const data = req.body;
-  //save the dummyData for testing
-  const dummyData = {
-    data: '23/34/2005',
-    location: 'kandy',
-    sensorType: 'thermo',
-    notes: null,
-  };
-  collection.insertOne(dummyData, (error, result) => {
-    if (error) {
-      console.log(error);
-      return response.status(500).send(error);
-    }
-    console.log(result.result);
-    res.send(result.result);
-  });
-});
-
-app.get('/api', (req, res) => {
-  collection.find({}).toArray((error, result) => {
-    if (error) {
-      return res.status(500).send(error);
-    }
-    res.send(result);
-  });
-});
-
-app.listen(PORT, () => {
+app.listen(PORT, (req, res) => {
   const client = new MongoClient(CONNECTION_URL, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
@@ -49,6 +25,7 @@ app.listen(PORT, () => {
 
   client.connect((err) => {
     if (err) {
+      res.status(500).send(error);
       throw err;
     }
     collection = client.db('kiwrious').collection('kiwrious');
